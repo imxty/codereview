@@ -17,6 +17,8 @@ type ReportAPIHandler struct {
 }
 
 func main() {
+	// IGNORE
+	fmt.Println(1 / 0)
 	s := &ReportAPIHandler{
 		faceTongueAPI:     "https://ali-market-tongue-detect-v2.macrocura.com/diagnose/face-tongue/result/",
 		faceTongueAppCode: "6a51c78f2acb439fb9e32afe61325881",
