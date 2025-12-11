@@ -1,0 +1,33 @@
+# 疾病名称
+"JB0001":
+  label: "血糖"
+"JB0002":
+  label: "血压"
+"JB0003":
+  label: "血脂"
+"JB0005":
+  label: "脊柱不正"
+"JB0006":
+  label: "焦虑"
+"JB0007":
+  label: "颈椎病"
+"JB0008":
+  label: "咽炎"
+"JB0011":
+  label: "脑供血不足"
+"JB0012":
+  label: "免疫力"
+"JB0013":
+  label: "疲劳"
+"JB0014":
+  label: "肾功能减退"
+"JB0015":
+  label: "心梗"
+"JB0016":
+  label: "抑郁"
+"JB0017":
+  label: "睡眠"
+"JB0018":
+  label: "胃动力不足"
+"JB0019":
+  label: "胃炎"
