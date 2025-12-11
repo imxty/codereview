@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}首页 - 测试平台{% endblock %}
+{% block page_title %}仪表板{% endblock %}
+{% block page_subtitle %}测试平台概览和统计信息{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- 统计卡片 -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start border-primary border-4 shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs fw-bold text-primary text-uppercase mb-1">
+                            总测试用例
+                        </div>
+                        <div class="h5 mb-0 fw-bold text-gray-800" id="totalCases">0</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-list-check fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start border-success border-4 shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs fw-bold text-success text-uppercase mb-1">
+                            今日执行
+                        </div>
+                        <div class="h5 mb-0 fw-bold text-gray-800" id="todayExecutions">0</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-play-circle fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start border-info border-4 shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs fw-bold text-info text-uppercase mb-1">
+                            通过率
+                        </div>
+                        <div class="h5 mb-0 fw-bold text-gray-800" id="passRate">0%</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-graph-up fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start border-warning border-4 shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs fw-bold text-warning text-uppercase mb-1">
+                            系统状态
+                        </div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">
+                            <span class="badge bg-success" id="systemStatus">正常</span>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-server fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- 测试类型分布 -->
+    <div class="col-lg-8 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-white py-3">
+                <h6 class="m-0 fw-bold text-primary">
+                    <i class="bi bi-pie-chart me-2"></i>测试类型分布
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="testTypeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 最近执行 -->
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-white py-3">
+                <h6 class="m-0 fw-bold text-primary">
+                    <i class="bi bi-clock-history me-2"></i>最近执行
+                </h6>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush" id="recentExecutions">
+                    <div class="list-group-item text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">加载中...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- 通过率趋势 -->
+    <div class="col-12 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-white py-3">
+                <h6 class="m-0 fw-bold text-primary">
+                    <i class="bi bi-graph-up me-2"></i>通过率趋势 (最近7天)
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height: 400px;">
+                    <canvas id="passRateTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-white py-3">
+                <h6 class="m-0 fw-bold text-primary">
+                    <i class="bi bi-lightning me-2"></i>快速操作
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3 col-6">
+                        <a href="{{ url_for('api_test_cases_page') }}" class="btn btn-outline-primary w-100 h-100 py-3">
+                            <i class="bi bi-plug fs-1 d-block mb-2"></i>
+                            <span>接口测试</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <a href="{{ url_for('web_test_cases_page') }}" class="btn btn-outline-success w-100 h-100 py-3">
+                            <i class="bi bi-globe fs-1 d-block mb-2"></i>
+                            <span>Web测试</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <a href="{{ url_for('app_test_cases_page') }}" class="btn btn-outline-info w-100 h-100 py-3">
+                            <i class="bi bi-phone fs-1 d-block mb-2"></i>
+                            <span>APP测试</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <a href="{{ url_for('execution_page') }}" class="btn btn-outline-warning w-100 h-100 py-3">
+                            <i class="bi bi-play-btn fs-1 d-block mb-2"></i>
+                            <span>测试执行</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
