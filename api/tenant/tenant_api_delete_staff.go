@@ -1,0 +1,34 @@
+package tenant
+
+import (
+	"context"
+	gerr "errors"
+
+	pb "github.com/jinmukeji/huimaibao-proto/gen/go/huimaibao/api/tenant/v1"
+	userv1 "github.com/jinmukeji/huimaibao-proto/gen/go/huimaibao/biz/user/v1"
+	"github.com/jinmukeji/huimaibao-service/api"
+	"github.com/jinmukeji/plat-pkg/v4/micro/errors"
+	"github.com/jinmukeji/plat-pkg/v4/micro/errors/codes"
+)
+
+func (s *TenantAPIHandler) DeleteStaff(ctx context.Context, req *pb.DeleteStaffRequest, rsp *pb.DeleteStaffResponse) error {
+	err := validateDeleteStaffRequest(req)
+	if err != nil {
+		return errors.Error(codes.InvalidRequest, err.Error())
+	}
+	_, err = s.userAPI.DeleteStaff(ctx, &userv1.DeleteStaffRequest{
+		StaffId: req.GetStaffId(),
+	})
+	if err != nil {
+		return errors.Error(api.GetSrvErrorCode(err), api.ErrorMsg(err))
+	}
+	return nil
+}
+
+// 验证request
+func validateDeleteStaffRequest(req *pb.DeleteStaffRequest) error {
+	if req.GetStaffId() == "" {
+		return gerr.New("staff id should not be empty")
+	}
+	return nil
+}

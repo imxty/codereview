@@ -1,0 +1,351 @@
+version: "3"
+services:
+  etcd:
+    image: bitnami/etcd:latest
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+    ports:
+      - 2379:2379
+      - 2380:2380
+    networks:
+      - app_net
+
+  api:
+    image: 703945416807.dkr.ecr.cn-north-1.amazonaws.com.cn/jm/jm-gateway:latest
+    command:
+      - "--config_etcd_address=etcd:2379"
+      - "--server_address=0.0.0.0:16660"
+      - "--server_name=com.shangyikangyou.huimaibao.api"
+    depends_on:
+      - etcd
+    networks:
+      - app_net
+    ports:
+      - "16660:16660"
+
+  api-app:
+    image: 703945416807.dkr.ecr.cn-north-1.amazonaws.com.cn/huimaibao/api-app:latest
+    command:
+      - "--registry=etcd"
+      - "--registry_address=etcd:2379"
+      - "--log_level=DEBUG"
+      # 如果使用 Logstash 格式日志，取消下一行注释
+      # - "--log_format=LOGSTASH"
+      - "--register_interval=5"
+      - "--register_ttl=10"
+      - "--server_address=:6088"
+      - "--client_pool_size=10"
+      - "--config_etcd_address=etcd:2379"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.@global.docker-macos.yml"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.report.yml"
+    volumes:
+      - "./conf:/conf"
+    depends_on:
+      - etcd
+    networks:
+      - app_net
+    ports:
+      - "6088:6088"
+  api-boss:
+    image: 703945416807.dkr.ecr.cn-north-1.amazonaws.com.cn/huimaibao/api-boss:latest
+    command:
+      - "--registry=etcd"
+      - "--registry_address=etcd:2379"
+      - "--log_level=DEBUG"
+      # 如果使用 Logstash 格式日志，取消下一行注释
+      # - "--log_format=LOGSTASH"
+      - "--register_interval=5"
+      - "--register_ttl=10"
+      - "--server_address=:6089"
+      - "--client_pool_size=10"
+      - "--config_etcd_address=etcd:2379"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.@global.docker-macos.yml"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.report.yml"
+    volumes:
+      - "./conf:/conf"
+    depends_on:
+      - etcd
+    networks:
+      - app_net
+    ports:
+      - "6089:6089"
+  api-h5:
+    image: 703945416807.dkr.ecr.cn-north-1.amazonaws.com.cn/huimaibao/api-h5:latest
+    command:
+      - "--registry=etcd"
+      - "--registry_address=etcd:2379"
+      - "--log_level=DEBUG"
+      # 如果使用 Logstash 格式日志，取消下一行注释
+      # - "--log_format=LOGSTASH"
+      - "--register_interval=5"
+      - "--register_ttl=10"
+      - "--server_address=:6090"
+      - "--client_pool_size=10"
+      - "--config_etcd_address=etcd:2379"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.@global.docker-macos.yml"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.report.yml"
+    volumes:
+      - "./conf:/conf"
+    depends_on:
+      - etcd
+    networks:
+      - app_net
+    ports:
+      - "6090:6090"
+  api-organization:
+    image: 703945416807.dkr.ecr.cn-north-1.amazonaws.com.cn/huimaibao/api-organization:latest
+    command:
+      - "--registry=etcd"
+      - "--registry_address=etcd:2379"
+      - "--log_level=DEBUG"
+      # 如果使用 Logstash 格式日志，取消下一行注释
+      # - "--log_format=LOGSTASH"
+      - "--register_interval=5"
+      - "--register_ttl=10"
+      - "--server_address=:6091"
+      - "--client_pool_size=10"
+      - "--config_etcd_address=etcd:2379"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.@global.docker-macos.yml"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.report.yml"
+    volumes:
+      - "./conf:/conf"
+    depends_on:
+      - etcd
+    networks:
+      - app_net
+    ports:
+      - "6091:6091"
+  api-tenant:
+    image: 703945416807.dkr.ecr.cn-north-1.amazonaws.com.cn/huimaibao/api-tenant:latest
+    command:
+      - "--registry=etcd"
+      - "--registry_address=etcd:2379"
+      - "--log_level=DEBUG"
+      # 如果使用 Logstash 格式日志，取消下一行注释
+      # - "--log_format=LOGSTASH"
+      - "--register_interval=5"
+      - "--register_ttl=10"
+      - "--server_address=:6092"
+      - "--client_pool_size=10"
+      - "--config_etcd_address=etcd:2379"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.@global.docker-macos.yml"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.report.yml"
+    volumes:
+      - "./conf:/conf"
+    depends_on:
+      - etcd
+    networks:
+      - app_net
+    ports:
+      - "6092:6092"
+  api-ai:
+    image: 703945416807.dkr.ecr.cn-north-1.amazonaws.com.cn/huimaibao/api-ai:latest
+    command:
+      - "--registry=etcd"
+      - "--registry_address=etcd:2379"
+      - "--log_level=DEBUG"
+      # 如果使用 Logstash 格式日志，取消下一行注释
+      # - "--log_format=LOGSTASH"
+      # - "--register_interval=5"
+      # - "--register_ttl=10"
+      - "--server_address=:9200"
+      # - "--client_pool_size=10"
+      - "--config_etcd_address=etcd:2379"
+    depends_on:
+      - etcd
+    networks:
+      - app_net
+    ports:
+      - "9200:9200"
+  customer:
+    image: 703945416807.dkr.ecr.cn-north-1.amazonaws.com.cn/huimaibao/customer:latest
+    command:
+      - "--registry=etcd"
+      - "--registry_address=etcd:2379"
+      - "--log_level=DEBUG"
+      # 如果使用 Logstash 格式日志，取消下一行注释
+      # - "--log_format=LOGSTASH"
+      - "--register_interval=5"
+      - "--register_ttl=10"
+      - "--server_address=:6093"
+      - "--client_pool_size=10"
+      - "--config_etcd_address=etcd:2379"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.@global.docker-macos.yml"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.report.yml"
+    volumes:
+      - "./conf:/conf"
+    depends_on:
+      - etcd
+    networks:
+      - app_net
+    ports:
+      - "6093:6093"
+  device:
+    image: 703945416807.dkr.ecr.cn-north-1.amazonaws.com.cn/huimaibao/device:latest
+    command:
+      - "--registry=etcd"
+      - "--registry_address=etcd:2379"
+      - "--log_level=DEBUG"
+      # 如果使用 Logstash 格式日志，取消下一行注释
+      # - "--log_format=LOGSTASH"
+      - "--register_interval=5"
+      - "--register_ttl=10"
+      - "--server_address=:6094"
+      - "--client_pool_size=10"
+      - "--config_etcd_address=etcd:2379"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.@global.docker-macos.yml"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.report.yml"
+    volumes:
+      - "./conf:/conf"
+    depends_on:
+      - etcd
+    networks:
+      - app_net
+    ports:
+      - "6094:6094"
+  notification:
+    image: 703945416807.dkr.ecr.cn-north-1.amazonaws.com.cn/huimaibao/notification:latest
+    command:
+      - "--registry=etcd"
+      - "--registry_address=etcd:2379"
+      - "--log_level=DEBUG"
+      # 如果使用 Logstash 格式日志，取消下一行注释
+      # - "--log_format=LOGSTASH"
+      - "--register_interval=5"
+      - "--register_ttl=10"
+      - "--server_address=:6095"
+      - "--client_pool_size=10"
+      - "--config_etcd_address=etcd:2379"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.@global.docker-macos.yml"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.report.yml"
+    volumes:
+      - "./conf:/conf"
+    depends_on:
+      - etcd
+    networks:
+      - app_net
+    ports:
+      - "6095:6095"
+  product:
+    image: 703945416807.dkr.ecr.cn-north-1.amazonaws.com.cn/huimaibao/product:latest
+    command:
+      - "--registry=etcd"
+      - "--registry_address=etcd:2379"
+      - "--log_level=DEBUG"
+      # 如果使用 Logstash 格式日志，取消下一行注释
+      # - "--log_format=LOGSTASH"
+      - "--register_interval=5"
+      - "--register_ttl=10"
+      - "--server_address=:6096"
+      - "--client_pool_size=10"
+      - "--config_etcd_address=etcd:2379"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.@global.docker-macos.yml"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.report.yml"
+    volumes:
+      - "./conf:/conf"
+    depends_on:
+      - etcd
+    networks:
+      - app_net
+    ports:
+      - "6096:6096"
+  report:
+    image: 703945416807.dkr.ecr.cn-north-1.amazonaws.com.cn/huimaibao/report:latest
+    command:
+      - "--registry=etcd"
+      - "--registry_address=etcd:2379"
+      - "--log_level=DEBUG"
+      # 如果使用 Logstash 格式日志，取消下一行注释
+      # - "--log_format=LOGSTASH"
+      - "--register_interval=5"
+      - "--register_ttl=10"
+      - "--server_address=:6097"
+      - "--client_pool_size=10"
+      - "--config_etcd_address=etcd:2379"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.@global.docker-macos.yml"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.report.yml"
+    volumes:
+      - "./conf:/conf"
+    depends_on:
+      - etcd
+    networks:
+      - app_net
+    ports:
+      - "6097:6097"
+  review:
+    image: 703945416807.dkr.ecr.cn-north-1.amazonaws.com.cn/huimaibao/review:latest
+    command:
+      - "--registry=etcd"
+      - "--registry_address=etcd:2379"
+      - "--log_level=DEBUG"
+      # 如果使用 Logstash 格式日志，取消下一行注释
+      # - "--log_format=LOGSTASH"
+      - "--register_interval=5"
+      - "--register_ttl=10"
+      - "--server_address=:6098"
+      - "--client_pool_size=10"
+      - "--config_etcd_address=etcd:2379"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.@global.docker-macos.yml"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.report.yml"
+    volumes:
+      - "./conf:/conf"
+    depends_on:
+      - etcd
+    networks:
+      - app_net
+    ports:
+      - "6098:6098"
+  user:
+    image: 703945416807.dkr.ecr.cn-north-1.amazonaws.com.cn/huimaibao/user:latest
+    command:
+      - "--registry=etcd"
+      - "--registry_address=etcd:2379"
+      - "--log_level=DEBUG"
+      # 如果使用 Logstash 格式日志，取消下一行注释
+      # - "--log_format=LOGSTASH"
+      - "--register_interval=5"
+      - "--register_ttl=10"
+      - "--server_address=:6099"
+      - "--client_pool_size=10"
+      - "--config_etcd_address=etcd:2379"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.@global.docker-macos.yml"
+      # - "--config_file=/conf/com.shangyikangyou.platform.srv.report.yml"
+    volumes:
+      - "./conf:/conf"
+    depends_on:
+      - etcd
+    networks:
+      - app_net
+    ports:
+      - "6099:6099"
+
+  redis:
+    image: redis:5.0
+    restart: always
+    command: --appendonly yes
+    ports:
+      - 6379:6379
+    networks:
+      - app_net
+    volumes:
+      - ./redis_data:/var/lib/redis
+
+networks:
+  app_net:
+    ipam:
+      driver: default
+      config:
+        #
+        # 合法的可以地址范围如下：
+        #   A类地址：10.0.0.0～10.255.255.255
+        #   B类地址：172.16.0.0～172.31.255.255
+        #   C类地址：192.168.0.0～192.168.255.255
+        #
+        # 避免使用与部署环境 VPC 的 CIDR 相冲突的子网，以下几个禁止使用：
+        #   - 172.31.0.0/16
+        #   - 172.31.0.0/16
+        #   - 10.0.0.0/16
+        #   - 10.169.0.0/16
+        #
+        - subnet: "192.168.29.0/24"

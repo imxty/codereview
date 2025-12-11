@@ -24,3 +24,5 @@ jobs:
           qianwen-model: qwen-turbo  # 可选：qwen-plus/qwen-max
           review-comment-title: 🤖 千问代码评审意见
           github-token: ${{ secrets.GITHUB_TOKEN }}  # 默认令牌（已配置权限）
+          ignore-comment: IGNORE
+          ignored-dirs: "docs/,test/,mock/,scripts/,backup/,custom_dir/"
